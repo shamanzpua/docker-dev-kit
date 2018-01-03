@@ -1,0 +1,39 @@
+version: "2"
+services:
+  web-dev-kit:
+    container_name: web-dev-kit
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+      args:
+          USER: $USER
+    ports:
+     - "150:80"
+    volumes:
+     - ./public:/var/www/html
+    depends_on:
+     - mysql-dev-kit
+    links:
+     - mysql-dev-kit
+    user: $USER
+  mysql-dev-kit:
+      image: mysql:5.7
+      ports:
+       - "3309:3306"
+      environment:
+       - MYSQL_ROOT_PASSWORD=root
+       - MYSQL_USER=user
+       - MYSQL_PASSWORD=user
+       - MYSQL_DATABASE=dev_kit
+      volumes:
+       - ./docker/mysql:/var/lib/mysql
+  phpmyadmin-laravel:
+      image: phpmyadmin/phpmyadmin
+      links:
+       - mysql-dev-kit
+      depends_on:
+       - mysql-dev-kit
+      ports:
+       - "151:80"
+      environment:
+       - PMA_HOST=mysql
