@@ -1,0 +1,3 @@
+FROM mysql:5.7
+ARG USER
+RUN useradd -G www-data -m $USER

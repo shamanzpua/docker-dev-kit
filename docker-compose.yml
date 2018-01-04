@@ -4,7 +4,7 @@ services:
     container_name: web-dev-kit
     build:
       context: ./
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile_web
       args:
           USER: $USER
     ports:
@@ -18,7 +18,11 @@ services:
     user: $USER
   mysql-dev-kit:
       container_name: mysql-dev-kit
-      image: mysql:5.7
+      build:
+        context: ./
+        dockerfile: docker/Dockerfile_mysql
+        args:
+            USER: $USER
       ports:
        - "3309:3306"
       environment:
@@ -28,6 +32,7 @@ services:
        - MYSQL_DATABASE=dev_kit
       volumes:
        - ./docker/mysql:/var/lib/mysql
+      user: $USER
   phpmyadmin-dev-kit:
       image: phpmyadmin/phpmyadmin
       links:
